@@ -1,0 +1,55 @@
+name: Fabriquer l'app iPhone
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  ipa:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - name: Récupérer les fichiers
+        uses: actions/checkout@v4
+
+      - name: Choisir Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Ranger les fichiers dans un projet Xcode
+        run: |
+          mkdir -p PotamosCamera PotamosCamera.xcodeproj
+          mv *.swift PotamosCamera/
+          mv project.pbxproj PotamosCamera.xcodeproj/
+          A=PotamosCamera/Assets.xcassets
+          mkdir -p "$A/AppIcon.appiconset"
+          printf '{"info":{"author":"xcode","version":1}}\n' > "$A/Contents.json"
+          printf '{"images":[{"filename":"AppIcon-1024.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"xcode","version":1}}\n' > "$A/AppIcon.appiconset/Contents.json"
+          mv AppIcon-1024.png "$A/AppIcon.appiconset/"
+          find PotamosCamera PotamosCamera.xcodeproj Info.plist
+
+      - name: Compiler l'app
+        run: |
+          xcodebuild build \
+            -project PotamosCamera.xcodeproj \
+            -scheme PotamosCamera \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            -skipPackagePluginValidation -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+      - name: Fabriquer le fichier IPA
+        run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/PotamosCamera.app Payload/
+          ls Payload/PotamosCamera.app
+          zip -qry PotamosCamera.ipa Payload
+
+      - name: Mettre l'IPA à disposition
+        uses: actions/upload-artifact@v4
+        with:
+          name: PotamosCamera-IPA
+          path: PotamosCamera.ipa
