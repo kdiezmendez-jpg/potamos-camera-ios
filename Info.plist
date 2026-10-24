@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Potamos Caméra filme le culte et envoie l'image à OBS.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Potamos Caméra peut envoyer le son de l'iPhone à OBS (désactivé par défaut).</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Potamos Caméra envoie l'image au Mac (OBS) sur ton réseau local ou par câble.</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarHidden</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>
